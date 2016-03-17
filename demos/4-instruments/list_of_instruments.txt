@@ -1,0 +1,8 @@
+guitar      string-instrument
+mandolin    string-instrument
+ukelele     string-instrument
+harp        string-instrument
+saxophone   wind-instrument
+trombone    wind-instrument
+trumpet     wind-instrument
+bassoon     wind-instrument

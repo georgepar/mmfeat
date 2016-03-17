@@ -1,0 +1,26 @@
+#
+# Settings file for the miners. Enter your own configuration keys here.
+#
+# For Google:       https://console.developers.google.com
+# For Bing:         https://datamarket.azure.com/account/keys
+# For FreeSound:    http://www.freesound.org/apiv2/apply
+#
+# Note that Google requires a custom search engine ID as
+# well as API keys.
+#
+
+google:
+  search-id: SEARCH_ENGINE_ID
+  api-keys:
+    - API_KEY1
+    - API_KEY2
+  lang: "lang_en"
+
+bing:
+  api-keys:
+    - API_KEY
+  lang: "en-US" # Bing calls this 'Market'
+
+freesound:
+  api-keys:
+    - API_KEY

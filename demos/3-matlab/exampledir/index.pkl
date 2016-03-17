@@ -1,0 +1,13 @@
+(dp0
+S'student'
+p1
+(lp2
+S'15330.jpg'
+p3
+aS'15332.jpg'
+p4
+aS'15328.jpg'
+p5
+aS'15339.jpg'
+p6
+as.

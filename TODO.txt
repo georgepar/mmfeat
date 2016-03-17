@@ -1,0 +1,16 @@
+TODO
+----
+If you are looking to contribute, feel free to do any of these things:
+
+- Give freesound miner its own saveFile method
+- Handle daily-limit-reached exceptions
+- Make the miners multiprocessed
+- Add Flickr miner
+- Add BoCC model
+- Unit tests
+- Installer script (setup.py)
+- Add more demos, e.g.:
+  -- Classifying documents multi-modally
+  -- Doing BLI (needs avgmax and maxmax sim functions in mmfeat.space.sim)
+  -- Simple cross-modal mappings
+  -- Etc.

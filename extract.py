@@ -45,21 +45,7 @@ if __name__ == '__main__':
     elif args.model == 'bovw':
         model = BoVW(args.k, subsample=args.sample_files)
     elif args.model == 'cnn':
-        local_caffe_root = os.getenv('CAFFE_ROOT_PATH')
-        if local_caffe_root is None:
-            print('Please set the CAFFE_ROOT_PATH environment variable to the Caffe root folder')
-            print('For example:')
-            print('$ export CAFFE_ROOT_PATH=/home/user/caffe')
-            print('Or add it to your ~/.bashrc')
-            quit()
-        if ':' in local_caffe_root:
-            # if we have multiple paths for Caffe, pick the first existing one
-            dirs = local_caffe_root.split(':')
-            for dir in dirs:
-                if os.path.exists(dir):
-                    local_caffe_root = dir
-
-        model = CNN(caffe_root=local_caffe_root, modelType=args.modelType, gpu=args.gpu)
+        model = CNN(modelType=args.modelType, gpu=args.gpu)
 
     print('Loading..')
     model.load(args.data_dir)

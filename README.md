@@ -57,4 +57,18 @@ export CAFFE_ROOT_PATH="/usr/local/caffe/"
 
 ## Demos
 
-TBD
+#### 1. Similarity and relatedness (1-simrel)
+
+The demo downloads images from either Google or Bing and creates BoVW or CNN representations. It then evaluates similarity and relatedness (i.e., Spearman correlation with human similarity ratings) on the well-known MEN and SimLex-999 datasets.
+
+#### 2. ESP Game dataset (2-esp)
+
+The demo downloads the ESP Game dataset sample and extracts it. It then builds an index from the label lookup and obtains BoAW or CNN representations for the thumbnail images. The representations are stored in a file for later use.
+
+#### 3. Matlab interfacing (3-matlab)
+
+A simple demo to show that you can get local descriptors from Matlab and load them. This means you can use VLFeat or other libraries for getting descriptors (for instance, PHOW) as well.
+
+#### 4. Music instrument clustering (4-instruments)
+
+The demo downloads sound files for 8 instruments of two classes and obtains auditory representations. It then clusters the representations and reports the outcomes.

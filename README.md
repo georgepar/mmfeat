@@ -1,5 +1,5 @@
 # MMFeat
-Multi-modal features toolkit, developed at the University of Cambridge Computer Laboratory. The aim of this toolkit is to make it easier for researchers to use multi-modal features. Both image and sound (i.e., visual and auditory representations) are supported.
+Multi-modal features toolkit in Python, developed at the University of Cambridge Computer Laboratory. The aim of this toolkit is to make it easier for researchers to use multi-modal features. Both image and sound (i.e., visual and auditory representations) are supported.
 
 The following models are currently available:
 

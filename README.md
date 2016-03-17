@@ -1,5 +1,5 @@
 # MMFeat
-Multi-modal features toolkit, developed at the University of Cambridge Computer Laboratory. The aim of this toolkit is to make it easier for researchers to use multi-modal features. Both image and sound (i.e., visual and auditory representations) are supported.
+Multi-modal features toolkit in Python, developed at the University of Cambridge Computer Laboratory. The aim of this toolkit is to make it easier for researchers to use multi-modal features. Both image and sound (i.e., visual and auditory representations) are supported.
 
 The following models are currently available:
 
@@ -20,7 +20,7 @@ sudo apt-get install build-essential python-dev python-setuptools \
 The toolkit comes with two tools that do not require any knowledge of Python and that can be run from the command-line.
 
 #### miner.py
-For mining images or sound files. Before you can use the miner you need to acquire API keys from Google, Bing or FreeSound and set them in `miner.yaml`. The `query_file` argument should point to a file that contains a list of queries, one query per line. Usage:
+For mining images or sound files. Before you can use the miner you need to acquire API keys from [Google](https://console.developers.google.com), [Bing](https://datamarket.azure.com/account/keys) or [FreeSound](http://www.freesound.org/apiv2/apply) and set them in `miner.yaml` (see `miner-example.yaml` for an example). The `query_file` argument should point to a file that contains a list of queries, one query per line. Usage:
 
 ```sh
 miner.py [-h] [-n NUM_FILES]

@@ -1,5 +1,7 @@
 '''
 Bing Search API miner
+
+Partially based on py-bing-search (https://github.com/tristantao/py-bing-search)
 '''
 
 import requests

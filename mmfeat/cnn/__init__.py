@@ -10,7 +10,11 @@ from multiprocessing import Pool, Manager
 
 import numpy as np
 
-import caffe
+try:
+    import caffe
+except ImportError:
+    import warnings
+    warnings.warn('Could not find Caffe Python bindings. You will not be able to use the CNN models.')
 
 net = None # needs to be global because of multiprocessing
 

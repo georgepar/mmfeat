@@ -10,8 +10,11 @@ class BoW():
     def __init__(self, K, subsample=None, normalize=True, verbose=True, saveMeans=True):
         '''
         K:          number of dimensions
-        subsample:  if not None, take sample of all files for clustering
+        subsample:  if not None, do not use all files for clustering but only a sample
         verbose:    verbosity
+        normalize:  provide normalized vectors
+        verbose:    be verbose
+        saveMeans:  save the means (i.e., centroids) to the datadir as centroids.pkl
         '''
         self.K = int(K)
         self.subsample = subsample
@@ -27,7 +30,7 @@ class BoW():
     def fit(self, data=None):
         '''
         data:       data dictionary {'filename': np.array(...), ...}
-                    or a class with __getitem__()
+                    or a class with __getitem__() and keys()
         '''
         if data is not None:
             self.data = data

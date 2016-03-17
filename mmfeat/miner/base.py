@@ -16,6 +16,9 @@ if 'MMFEAT_YAML_SETTINGS_FILE' not in globals():
 
 class BaseMiner(object):
     def __init__(self, save_dir):
+        '''
+        save_dir:   the directory where we save files to
+        '''
         self.config = yaml.load(open(MMFEAT_YAML_SETTINGS_FILE))
         self.save_dir = save_dir
         self.cur_api_key = 0
@@ -37,6 +40,10 @@ class BaseMiner(object):
                                 for fname in sublist if fname is not None]) + 1
 
     def getResults(self, queries, limit):
+        '''
+        queries:    list of queries
+        limit:      number of files per query
+        '''
         self.results = {}
         for query in queries:
             if query in self.idx:
@@ -54,6 +61,9 @@ class BaseMiner(object):
             self.results[query] = query_results
 
     def saveFile(self, result):
+        '''
+        result:     result object (BingResult, GoogleResult or FreesoundResult)
+        '''
         if result.format in ['image/jpg', 'image/jpeg']:
             format = 'jpg'
         elif result.format in ['image/png']:

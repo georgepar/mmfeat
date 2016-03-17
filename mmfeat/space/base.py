@@ -14,6 +14,7 @@ from .sim import cosine
 
 class Space(object):
     def __init__(self, descrs):
+        self.reportMissing = True
         if isinstance(descrs, str):
             self.space = pickle.load(open(descrs, 'rb'))
         elif isinstance(descrs, dict):
@@ -34,9 +35,14 @@ class Space(object):
             raise TypeError('Dataset is not of correct type, list of [str, str, float] triples expected.')
         gs_scores, sys_scores = [], []
         for one, two, gs_score in dataset:
-            sys_score = self.sim(one, two)
-            gs_scores.append(gs_score)
-            sys_scores.append(sys_score)
+            try:
+                sys_score = self.sim(one, two)
+                gs_scores.append(gs_score)
+                sys_scores.append(sys_score)
+            except KeyError:
+                if self.reportMissing:
+                    print 'Warning: Missing pair %s-%s - skipping' % (one, two)
+                continue
         return spearmanr(gs_scores, sys_scores)
     def neighbours(self, key, n=None):
         sims = []
@@ -61,21 +67,30 @@ class AggSpace(Space):
         elif isinstance(descrs, dict):
             self.descrs = descrs
 
-        if self.cached_file_name is not None and os.path.exists(self.cached_file_name) and self.caching:
+        if self.caching and self.cached_file_name is not None and os.path.exists(self.cached_file_name):
             self.space = pickle.load(open(self.cached_file_name, 'rb'))
-        if aggFunc in ['mean', 'max']:
+        elif aggFunc in ['mean', 'max']:
             if aggFunc == 'mean':
                 f = self.aggMean
             elif aggFunc == 'max':
                 f = self.aggMax
-            self.space = {k:f(self.descrs[k].values()) for k in self.descrs}
-            if self.caching:
+
+            self.space = {}
+            for k in self.descrs:
+                vecs = self.descrs[k].values()
+                if len(vecs) < 2:
+                    if self.reportMissing:
+                        print 'Warning: Not enough vectors for key %s - skipping' % k
+                    continue
+                self.space[k] = f(vecs)
+
+            if self.caching and self.cached_file_name is not None:
                 pickle.dump(self.space, open(self.cached_file_name, 'wb'))
 
     def aggMean(self, m):
-        return np.mean(m, axis=0)
+        return np.mean(np.nan_to_num(m), axis=0)
     def aggMax(self, m):
-        return np.max(m, axis=0)
+        return np.max(np.nan_to_num(m), axis=0)
 
     def getDispersions(self):
         if self.caching:

@@ -22,8 +22,8 @@ class BingResult(object):
             self.format = result['ContentType']
 
 class BingMiner(BaseMiner):
-    def __init__(self, save_dir):
-        super(BingMiner, self).__init__(save_dir)
+    def __init__(self, save_dir, config_path='./miner.yaml'):
+        super(BingMiner, self).__init__(save_dir, config_path)
         self.__engine__ = 'bing'
 
         self.api_keys   = self.config['bing']['api-keys']

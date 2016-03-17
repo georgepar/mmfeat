@@ -16,8 +16,8 @@ class FreeSoundResult(object):
         self.format = 'audio/ogg' # FreeSound default
 
 class FreeSoundMiner(BaseMiner):
-    def __init__(self, save_dir):
-        super(FreeSoundMiner, self).__init__(save_dir)
+    def __init__(self, save_dir, config_path='./miner.yaml'):
+        super(FreeSoundMiner, self).__init__(save_dir, config_path)
         self.__engine__ = 'freesound'
 
         self.api_keys   = self.config['freesound']['api-keys']

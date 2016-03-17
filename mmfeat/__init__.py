@@ -10,4 +10,4 @@ multi-modal representations.
 
 __version__ = '0.1-alpha'
 
-__all__ = ['bow', 'cnn', 'vspace']
+__all__ = ['bow', 'cnn', 'space', 'miner']

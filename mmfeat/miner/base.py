@@ -11,15 +11,13 @@ import time
 import urllib2
 import yaml
 
-if 'MMFEAT_YAML_SETTINGS_FILE' not in globals():
-    MMFEAT_YAML_SETTINGS_FILE = './miner.yaml'
-
 class BaseMiner(object):
-    def __init__(self, save_dir):
+    def __init__(self, save_dir, config_path):
         '''
-        save_dir:   the directory where we save files to
+        save_dir:       the directory where we save files to
+        config_path:    path to configuration file
         '''
-        self.config = yaml.load(open(MMFEAT_YAML_SETTINGS_FILE))
+        self.config = yaml.load(open(config_path))
         self.save_dir = save_dir
         self.cur_api_key = 0
         self.file_id = 1

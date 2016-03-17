@@ -17,8 +17,8 @@ class GoogleResult(object):
         # self.format = result['mime']
 
 class GoogleMiner(BaseMiner):
-    def __init__(self, save_dir):
-        super(GoogleMiner, self).__init__(save_dir)
+    def __init__(self, save_dir, config_path='./miner.yaml'):
+        super(GoogleMiner, self).__init__(save_dir, config_path)
         self.__engine__ = 'google'
 
         self.search_id   = self.config['google']['search-id']

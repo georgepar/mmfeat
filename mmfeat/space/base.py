@@ -57,6 +57,7 @@ class Space(object):
 
 class AggSpace(Space):
     def __init__(self, descrs, aggFunc='mean', caching=True):
+        self.reportMissing = True
         self.caching = caching
         self.cached_file_name = None
 

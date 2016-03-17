@@ -1,5 +1,9 @@
 #
-# Settings file for the miners. Enter your own configuration keys here.
+# Settings file for the miners. Enter your own configuration keys
+# here and save it as miner.yaml.
+#
+# You can tell the Miner classes to use different a different key
+# file by setting MMFEAT_YAML_SETTINGS_FILE in your python code.
 #
 # For Google:       https://console.developers.google.com
 # For Bing:         https://datamarket.azure.com/account/keys

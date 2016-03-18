@@ -59,7 +59,7 @@ export CAFFE_ROOT_PATH="/usr/local/caffe/"
 
 #### 1. Similarity and relatedness (1-simrel)
 
-The demo downloads images from either Google or Bing and creates BoVW or CNN representations. It then evaluates similarity and relatedness (i.e., Spearman correlation with human similarity ratings) on the well-known MEN and SimLex-999 datasets.
+The demo downloads images from either Google or Bing and creates BoVW or CNN representations. It then evaluates similarity and relatedness (i.e., Spearman correlation with human similarity ratings) on the well-known MEN and SimLex-999 datasets. See e.g. [Learning Image Embeddings using Convolutional Neural Networks for Improved Multi-Modal Semantics](http://www.cl.cam.ac.uk/~dk427/papers/emnlp2014.pdf)
 
 #### 2. ESP Game dataset (2-esp)
 
@@ -71,4 +71,8 @@ A simple demo to show that you can get local descriptors from Matlab and load th
 
 #### 4. Music instrument clustering (4-instruments)
 
-The demo downloads sound files for 8 instruments of two classes and obtains auditory representations. It then clusters the representations and reports the outcomes.
+The demo downloads sound files for 8 instruments of two classes and obtains auditory representations. It then clusters the representations and reports the outcomes. See [Multi- and Cross-Modal Semantics Beyond Vision: Grounding in Auditory Perception](http://www.cl.cam.ac.uk/~dk427/papers/emnlp2015a.pdf)
+
+#### 5. Image dispersion scores (5-dispersion)
+
+The demo downloads images for "elephant" and "happiness" and calculates the image dispersion scores of these concepts. See [Improving Multi-Modal Representations Using Image Dispersion: Why Less is Sometimes More](http://www.cl.cam.ac.uk/~dk427/papers/acl2014.pdf).

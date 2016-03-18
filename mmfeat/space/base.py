@@ -93,11 +93,12 @@ class AggSpace(Space):
     def aggMax(self, m):
         return np.max(np.nan_to_num(m), axis=0)
 
-    def getDispersions(self):
-        if self.caching:
-            cached_dispersions_file = '%s-dispersions.pkl' % (self.descrs_file)
-            if os.path.exists(cached_dispersions_file):
-                self.dispersions = pickle.load(open(cached_dispersions_file, 'rb'))
+    def getDispersions(self, rescale=True):
+        self.cached_dispersions_file = None
+        if self.caching and hasattr(self, 'descrs_file'):
+            self.cached_dispersions_file = '%s-dispersions.pkl' % (self.descrs_file)
+            if os.path.exists(self.cached_dispersions_file):
+                self.dispersions = pickle.load(open(self.cached_dispersions_file, 'rb'))
                 return
 
         def disp(M):
@@ -120,8 +121,9 @@ class AggSpace(Space):
                 min_disp, min_key = imgdisp, k
 
         # rescale
-        for k in self.dispersions:
-            self.dispersions[k] = max(0, min(1, (self.dispersions[k] - min_disp) / (max_disp - min_disp)))
+        if rescale:
+            for k in self.dispersions:
+                self.dispersions[k] = max(0, min(1, (self.dispersions[k] - min_disp) / (max_disp - min_disp)))
 
-        if self.caching:
-            pickle.dump(self.dispersions, open(cached_dispersions_file, 'wb'))
+        if self.caching and self.cached_dispersions_file is not None:
+            pickle.dump(self.dispersions, open(self.cached_dispersions_file, 'wb'))

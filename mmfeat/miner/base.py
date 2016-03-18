@@ -31,7 +31,7 @@ class BaseMiner(object):
 
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
-        else:
+        elif os.path.exists(self.save_dir + 'index.pkl'):
             self.idx        = pickle.load(open(self.save_dir + '/index.pkl', 'rb'))
             self.file_id    = max([int(fname.split('.')[0]) \
                                 for sublist in self.idx.itervalues() \

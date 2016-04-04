@@ -72,3 +72,14 @@ class BoW():
         for fname in sorted(self.data.keys()):
             means[fname] = np.mean(self.data[fname], axis=0)
         return means
+
+    def toLookup(self):
+        lkp = {}
+        # self.idx is obtained by children classes's load() method
+        for key in self.idx:
+            lkp[key] = {}
+            for fname in self.idx[key]:
+                fname = fname.split('/')[-1]
+                if fname not in self.descriptors: continue
+                lkp[key][fname] = self.descriptors[fname]
+        return lkp

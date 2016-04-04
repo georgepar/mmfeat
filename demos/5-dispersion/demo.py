@@ -46,13 +46,7 @@ if __name__ == '__main__':
     #
     # Build a lookup for the concepts
     print('Building lookup')
-    lkp = {}
-    for key in model.idx:
-        lkp[key] = {}
-        for fname in model.idx[key]:
-            fname = fname.split('/')[-1]
-            if fname not in model.descriptors: continue
-            lkp[key][fname] = model.descriptors[fname]
+    lkp = model.toLookup()
 
     #
     # Turn into a visual space and get the dispersion scores

@@ -69,13 +69,7 @@ if __name__ == '__main__':
     model.fit()
 
     print('Building visual lookup')
-    lkp = {}
-    for key in model.idx:
-        lkp[key] = {}
-        for fname in model.idx[key]:
-            fname = fname.split('/')[-1]
-            if fname not in model.descriptors: continue
-            lkp[key][fname] = model.descriptors[fname]
+    lkp = model.toLookup()
 
     #
     # 4. Build and save visual representations by taking the

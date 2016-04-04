@@ -109,3 +109,13 @@ class CNN(object):
                 p.apply_async(self.forward, args=(self.data[fname], fname, ))
             p.close()
             p.join()
+
+    def toLookup(self):
+        lkp = {}
+        for key in self.idx:
+            lkp[key] = {}
+            for fname in self.idx[key]:
+                fname = fname.split('/')[-1]
+                if fname not in self.descriptors: continue
+                lkp[key][fname] = self.descriptors[fname]
+        return lkp

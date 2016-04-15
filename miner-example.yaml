@@ -28,3 +28,7 @@ bing:
 freesound:
   api-keys:
     - API_KEY
+
+flickr:
+  api-keys:
+    - API_KEY;API_SECRET

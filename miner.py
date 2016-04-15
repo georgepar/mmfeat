@@ -8,7 +8,7 @@ from mmfeat.miner import *
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('engine', nargs=1, \
-        help='type of engine to use', choices=['bing', 'google', 'freesound'])
+        help='type of engine to use', choices=['bing', 'google', 'freesound', 'flickr'])
     parser.add_argument('query_file', nargs=1, \
         help='file that contains the list of queries (every line is a query)')
     parser.add_argument('data_dir', nargs=1, \
@@ -28,6 +28,8 @@ if __name__ == '__main__':
         miner = GoogleMiner(args.data_dir)
     elif args.engine == 'freesound':
         miner = FreeSoundMiner(args.data_dir)
+    elif args.engine == 'flickr':
+        miner = FlickrMiner(args.data_dir)
 
     queries = open(args.query_file).read().splitlines()
     miner.getResults(queries, args.num_files)

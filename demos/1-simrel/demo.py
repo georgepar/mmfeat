@@ -22,7 +22,7 @@ from mmfeat.space import *
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print 'Usage: python %s {google|bing} {bovw|cnn}'
+        print('Usage: python %s {google|bing} {bovw|cnn}' % sys.argv[0])
         quit()
 
     engine = sys.argv[1]
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         miner.getResults(unique_words, 10)
         miner.save()
     else:
-        print 'Image directory already exists..'
+        print('Image directory already exists..')
 
     #
     # 2. Get image representations
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     vs = AggSpace(lkp, 'mean')
 
     print('Loading linguistic space')
-    ls = Space('simrel-mikolov-pkl')
+    ls = Space('simrel-mikolov.pkl')
 
     #
     # 4. Construct multi-modal space
@@ -92,13 +92,13 @@ if __name__ == '__main__':
     #
     # 5. Run evaluations
     #
-    print 'Evaluating using engine %s, method %s. Results:' % (engine, method)
+    print('Evaluating using engine %s, method %s. Results:' % (engine, method))
     for name, dataset in {'MEN': men, 'SimLex': simlex}.items():
         r_s, p = ls.spearman(dataset)
-        print 'Linguistic %s spearman=%.4f (p=%.4f)' % (name, r_s, p)
+        print('Linguistic %s spearman=%.4f (p=%.4f)' % (name, r_s, p))
 
         r_s, p = vs.spearman(dataset)
-        print 'Visual %s spearman=%.4f (p=%.4f)' % (name, r_s, p)
+        print('Visual %s spearman=%.4f (p=%.4f)' % (name, r_s, p))
 
         r_s, p = mm.spearman(dataset)
-        print 'Multi-modal %s spearman=%.4f (p=%.4f)' % (name, r_s, p)
+        print('Multi-modal %s spearman=%.4f (p=%.4f)' % (name, r_s, p))

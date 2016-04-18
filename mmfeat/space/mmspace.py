@@ -9,6 +9,7 @@ import numpy as np
 
 class MMSpace(Space):
     def __init__(self, lingSpace, visSpace, modelType='middle', methodType='wmm', buildModel=False, alpha=0.5):
+        self.reportMissing = True
         self.alpha = alpha
         self.lingSpace = lingSpace
         self.visSpace = visSpace

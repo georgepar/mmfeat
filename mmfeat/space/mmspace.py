@@ -16,10 +16,19 @@ class MMSpace(Space):
         self.setMethodType(methodType)
 
         if modelType == 'middle':
+            # do some checks
+            example_key = self.visSpace.keys()[0]
+            if isinstance(self.visSpace[example_key], dict):
+                raise TypeError('Expecting vectors for the visual space, not dictionaries. Did you use AggSpace?')
+            elif not isinstance(self.visSpace[example_key], np.ndarray) or not isinstance(self.lingSpace[example_key], np.ndarray):
+                raise TypeError('Expecting numpy.ndarray')
+            elif self.visSpace[example_key].ndim != 1:
+                raise TypeError('Expecting tensors of rank 1 (vectors).')
+
             if buildModel: # build model in-place
                 self.space = {}
-                for k in self.lingSpace:
-                    if k in self.visSpace:
+                for k in self.lingSpace.keys():
+                    if k in self.visSpace.keys():
                         self.space[k] = self.concat(self.lingSpace[k], self.visSpace[k])
             else: # or override similarity function
                 self.sim = self.midSimFunc

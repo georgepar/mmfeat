@@ -25,6 +25,8 @@ class Space(object):
         return self.space[key]
     def __contains__(self, key):
         return key in self.space
+    def keys(self):
+        return self.space.keys()
     def sim(self, x, y):
         return cosine(self.space[x], self.space[y])
     def spearman(self, dataset):

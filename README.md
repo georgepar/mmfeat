@@ -76,3 +76,7 @@ The demo downloads sound files for 8 instruments of two classes and obtains audi
 #### 5. Image dispersion scores (5-dispersion)
 
 The demo downloads images for "elephant" and "happiness" and calculates the image dispersion scores of these concepts. See [Improving Multi-Modal Representations Using Image Dispersion: Why Less is Sometimes More](http://www.cl.cam.ac.uk/~dk427/papers/acl2014.pdf).
+
+#### 6. Image search plot (6-searchplot)
+
+A simple plotting demo of images returned by various search engines. Requires [matplotlib](http://matplotlib.org/).

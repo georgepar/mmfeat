@@ -13,7 +13,7 @@ class GoogleResult(object):
         self.ID     = None # Google has no unique IDs
         self.title  = result['title']
         self.url    = result['image']['thumbnailLink']
-        self.format = 'image/png' # default thumbnail format
+        self.format = 'image/jpg' # default thumbnail format
         # self.format = result['mime']
 
 class GoogleMiner(BaseMiner):

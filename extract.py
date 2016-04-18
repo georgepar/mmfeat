@@ -19,6 +19,8 @@ if __name__ == '__main__':
         help='file to store extracted features in (default will be a Python pickle, overwrite with -o)')
     parser.add_argument('-gpu', action='store_true', \
         help='use GPU for CNNs (default False)', default=False)
+    parser.add_argument('-gpuid', type=int, action='store', \
+        help='GPU id for CNNs (default 0)', default=0)
     parser.add_argument('-k', type=int, action='store', \
         help='number of dimensions in descriptors for bag-of-words (default 100)', default=100)
     parser.add_argument('-c', '--centroids', action='store', \
@@ -45,7 +47,7 @@ if __name__ == '__main__':
     elif args.model == 'bovw':
         model = BoVW(args.k, subsample=args.sample_files)
     elif args.model == 'cnn':
-        model = CNN(modelType=args.modelType, gpu=args.gpu)
+        model = CNN(modelType=args.modelType, gpu=args.gpu, gpuid=args.gpuid)
 
     print('Loading..')
     model.load(args.data_dir)

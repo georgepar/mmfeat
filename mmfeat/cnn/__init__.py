@@ -71,6 +71,8 @@ class CNN(object):
 
         self.transformer = transformer
 
+        self.useLayer = 'fc7'
+
     def load(self, datadir):
         self.data = DataObject(datadir, self.loadFile)
         self.idx = self.data.idx
@@ -88,10 +90,10 @@ class CNN(object):
             mmfeat_caffe_net.blobs['data'].data[...] = data
             # forward pass
             out = mmfeat_caffe_net.forward()
-            # extract fc7
-            fc7 = mmfeat_caffe_net.blobs['fc7'].data[0]
+            # extract relevant layer (default 'fc7')
+            layer = mmfeat_caffe_net.blobs[self.useLayer].data[0]
             # add to descriptors
-            self.descriptors[fname] = fc7.copy()
+            self.descriptors[fname] = layer.copy()
             if self.verbose: print('%s - done' % fname)
         except:
             traceback.print_exc(file=sys.stdout)

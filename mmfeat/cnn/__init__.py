@@ -4,7 +4,7 @@ Convolutional Neural Network features
 
 from ..base import DataObject
 
-import sys, traceback
+import os, sys, traceback
 import cPickle as pickle
 from multiprocessing import Pool, Manager
 
@@ -19,7 +19,7 @@ except ImportError:
 mmfeat_caffe_net = None # needs to be global because of multiprocessing
 
 class CNN(object):
-    def __init__(self, caffe_root=None, modelType='alexnet', gpu=False, verbose=True, n_workers=12):
+    def __init__(self, caffe_root=None, modelType='alexnet', gpu=False, gpuid=0, verbose=True, n_workers=12):
         global mmfeat_caffe_net
 
         if caffe_root is None:
@@ -42,8 +42,13 @@ class CNN(object):
 
         self.modelType = modelType
         self.useGPU = gpu
+        self.gpuid = gpuid
         self.verbose = verbose
         self.n_workers = n_workers
+
+        if self.useGPU:
+            caffe.set_device(self.gpuid)
+            caffe.set_mode_gpu()
 
         if modelType == 'alexnet':
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt',
@@ -61,8 +66,6 @@ class CNN(object):
 
         if self.useGPU:
             if self.verbose: print('We are in GPU mode.')
-            caffe.set_device(0)
-            caffe.set_mode_gpu()
             mmfeat_caffe_net.forward()
             self.descriptors = {}
         else:

@@ -25,6 +25,8 @@ class Space(object):
         return self.space[key]
     def __contains__(self, key):
         return key in self.space
+    def keys(self):
+        return self.space.keys()
     def sim(self, x, y):
         return cosine(self.space[x], self.space[y])
     def spearman(self, dataset):
@@ -41,7 +43,7 @@ class Space(object):
                 sys_scores.append(sys_score)
             except KeyError:
                 if self.reportMissing:
-                    print 'Warning: Missing pair %s-%s - skipping' % (one, two)
+                    print('Warning: Missing pair %s-%s - skipping' % (one, two))
                 continue
         return spearmanr(gs_scores, sys_scores)
     def neighbours(self, key, n=None):
@@ -77,11 +79,11 @@ class AggSpace(Space):
                 f = self.aggMax
 
             self.space = {}
-            for k in self.descrs:
+            for k in self.descrs.keys():
                 vecs = self.descrs[k].values()
                 if len(vecs) < 2:
                     if self.reportMissing:
-                        print 'Warning: Not enough vectors for key %s - skipping' % k
+                        print('Warning: Not enough vectors for key %s - skipping' % k)
                     continue
                 self.space[k] = f(vecs)
 

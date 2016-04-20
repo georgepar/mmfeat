@@ -6,7 +6,7 @@ import requests
 import time
 import urllib2
 
-from .base import BaseMiner
+from .base import BaseMiner, DailyLimitException
 
 class GoogleResult(object):
     def __init__(self, result):
@@ -38,21 +38,33 @@ class GoogleMiner(BaseMiner):
         r = requests.get(url)
         try:
             results = r.json()
+            if r.status_code in [403, 429, 503]:
+                raise ValueError('Status code indicates error')
         except ValueError:
-            print('ERR: Request returned with code %s (%s)' % (r.status_code, r.text))
+            print('ERR: Request returned with code %s' % (r.status_code))
             if r.status_code == 429 or r.status_code == 503:
                 print 'ERR (Google): Too many requests, sleeping..'
                 time.sleep(self.sleep_time)
                 self.sleep_time *= self.sleep_time
                 if self.sleep_time > self.max_sleep_time:
                     self.sleep_time = 5
+            elif r.status_code == 403:
+                if 'error' in results and 'message' in results['error'] \
+                    and (results['error']['message'].startswith('Daily Limit Exceeded.') or results['error']['message'].startswith('Project blocked;')):
+
+                    print('ERR (Google): Daily limit exceeded, trying other key..')
+                    if self.cur_api_key >= len(self.api_keys)-1:
+                        raise DailyLimitException('Daily limit reached (and no more API keys available).')
+                    else:
+                        self.cur_api_key += 1
+                        return self._search(query, offset)
             else:
                 time.sleep(self.sleep_time)
 
-        total = int(results['searchInformation']['totalResults'])
-
-        if 'items' not in results:
+        if 'items' not in results or 'searchInformation' not in results:
             return [], 0
+
+        total = int(results['searchInformation']['totalResults'])
 
         return [GoogleResult(res) for res in results['items']], total
 

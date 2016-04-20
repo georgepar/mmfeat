@@ -94,7 +94,7 @@ class CNN(object):
             # forward pass
             out = mmfeat_caffe_net.forward()
             # extract relevant layer (default 'fc7')
-            layer = mmfeat_caffe_net.blobs[self.useLayer].data[0]
+            layer = mmfeat_caffe_net.blobs[self.useLayer].data[0].flatten()
             # add to descriptors
             self.descriptors[fname] = layer.copy()
             if self.verbose: print('%s - done' % fname)

@@ -81,7 +81,7 @@ if __name__ == '__main__':
     vs = AggSpace(lkp, 'mean')
 
     print('Loading linguistic space')
-    ls = Space('simrel-mikolov.pkl')
+    ls = Space('simrel-wikipedia.pkl')
 
     #
     # 4. Construct multi-modal space

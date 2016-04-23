@@ -8,7 +8,6 @@ Text search is happening in the following way (from: https://www.flickr.com/serv
 
 import os
 import sys
-from requests_oauthlib import OAuth1Session
 import json
 import pickle
 from urllib import urlencode
@@ -16,7 +15,11 @@ import re
 
 from .base import BaseMiner
 
-
+try:
+    from requests_oauthlib import OAuth1Session
+except ImportError:
+    import warnings
+    warnings.warn('Could not find requests_oauthlib. You will not be able to use the Flickr miner.')
 
 class FlickrResult(object):
 

@@ -1,10 +1,13 @@
 '''
 Flickr Search API miner
+
+Text search is happening in the following way (from: https://www.flickr.com/services/api/flickr.photos.search.html):
+    Photos who's title, description or tags contain the text will be returned.
+    You can exclude results that match a term by prepending it with a - character.
 '''
 
 import os
 import sys
-from requests_oauthlib import OAuth1Session
 import json
 import pickle
 from urllib import urlencode
@@ -12,7 +15,11 @@ import re
 
 from .base import BaseMiner
 
-
+try:
+    from requests_oauthlib import OAuth1Session
+except ImportError:
+    import warnings
+    warnings.warn('Could not find requests_oauthlib. You will not be able to use the Flickr miner.')
 
 class FlickrResult(object):
 
@@ -46,7 +53,8 @@ class FlickrMiner(BaseMiner):
             self.oauth = self._do_oauth()
 
     def getUrl(self, query, limit, page):
-        params = {'text': query, 'format': 'json', 'page': page, 'per_page': min(self.MAXPERPAGE, limit)}
+        params = {'text': query, 'format': 'json', 'page': page, 'per_page': min(self.MAXPERPAGE, limit),
+                  'sort': 'relevance'}
         return self.format_url.format(self.host, self.api, urlencode(self._prepare_params(params)))
 
     def _prepare_params(self, params):
@@ -93,6 +101,10 @@ class FlickrMiner(BaseMiner):
         print "Flickr needs user authentication"
         print "--------------------------------"
         print "Visit this site:"
+        # Flickr permissions:
+        # read - permission to read private information
+        # write - permission to add, edit and delete photo metadata (includes 'read')
+        # delete - permission to delete photos (includes 'write' and 'read')
         print redirect_url+"&perms=write"
 
         redirect_response = raw_input('Paste the FULL URL here:')

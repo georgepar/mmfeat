@@ -27,7 +27,10 @@ class BoVW(BoW):
                 data = self.dsift.process_image(img)
                 np.save(fname + '-dsift.npy', data)
             else:
-                data = np.load(fname + '-dsift.npy')
+                try:
+                    data = np.load(fname + '-dsift.npy')
+                except:
+                    return None
         else:
             img = imread(fname)
             data = self.dsift.process_image(img)
@@ -42,7 +45,11 @@ class BoVW(BoW):
 
         if self.verbose: print('Loading %s' % fname)
 
-        data = loadmat(fname + '-dsift.mat')['descrs'].T
+        try:
+            data = loadmat(fname + '-dsift.mat')['descrs'].T
+        except:
+            return None
+
         return data
 
     def load(self, data_dir, cached=True):

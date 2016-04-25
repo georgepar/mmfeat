@@ -82,8 +82,12 @@ class CNN(object):
 
     def loadFile(self, fname):
         #if self.verbose: print('Loading %s' % fname)
-        image = caffe.io.load_image('%s' % fname)
-        return self.transformer.preprocess('data', image)
+        try:
+            image = caffe.io.load_image('%s' % fname)
+            return self.transformer.preprocess('data', image)
+        except (IOError, ValueError) as e:
+            if self.verbose: print('%s - error' % fname)
+            return None
 
     # forward pass in the network
     def forward(self, data, fname):

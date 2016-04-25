@@ -2,9 +2,11 @@
 FreeSound API miner
 '''
 
+import os
 import requests
+import shutil
 import time
-import urllib, urllib2
+import urllib
 
 from .base import BaseMiner
 
@@ -62,3 +64,35 @@ class FreeSoundMiner(BaseMiner):
             results += more_results
             page += 1
         return results
+
+    def saveFile(self, result):
+        '''
+        result:     result object (FreesoundResult)
+        '''
+        if result.format in ['audio/ogg']:
+            format = 'ogg'
+        else: # unknown format, skipping
+            return None
+
+        fname = '%s.%s' % (result.ID, format)
+        path = '%s/%s' % (self.save_dir, fname)
+        if os.path.exists(path):
+            print('%s - already exists' % fname)
+            return
+
+        # download the file (specifically, the high-quality ogg preview)
+        try:
+            r = requests.get(result.url, timeout=20)
+            response = r.json()
+            r = requests.get(response['previews']['preview-hq-ogg'], \
+                stream=True, timeout=20)
+            r.raw.decode_content = True
+            with open(path, 'wb') as fw:
+                shutil.copyfileobj(r.raw, fw)
+        except:
+            print(fname, 'error saving')
+            return None
+
+        print(fname)
+
+        return fname

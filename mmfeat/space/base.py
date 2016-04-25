@@ -72,9 +72,11 @@ class AggSpace(Space):
 
         if self.caching and self.cached_file_name is not None and os.path.exists(self.cached_file_name):
             self.space = pickle.load(open(self.cached_file_name, 'rb'))
-        elif aggFunc in ['mean', 'max']:
+        elif aggFunc in ['mean', 'median', 'max']:
             if aggFunc == 'mean':
                 f = self.aggMean
+            elif aggFunc == 'median':
+                f = self.aggMedian
             elif aggFunc == 'max':
                 f = self.aggMax
 
@@ -91,7 +93,9 @@ class AggSpace(Space):
                 pickle.dump(self.space, open(self.cached_file_name, 'wb'))
 
     def aggMean(self, m):
-        return np.mean(np.nan_to_num(m), axis=0)
+        return np.mean(np.nan_to_num(m), axis=0, dtype=np.float64)
+    def aggMedian(self, m):
+        return np.median(np.nan_to_num(m), axis=0)
     def aggMax(self, m):
         return np.max(np.nan_to_num(m), axis=0)
 
@@ -129,3 +133,23 @@ class AggSpace(Space):
 
         if self.caching and self.cached_dispersions_file is not None:
             pickle.dump(self.dispersions, open(self.cached_dispersions_file, 'wb'))
+
+
+    def nearest_neighbours(self, key, n=None):
+        '''Return the nearest neighbours to the centroid.'''
+        sims = []
+        for k, v in self.descrs[key].items():
+            sims.append(((k, v), cosine(v, self.space[key])))
+
+        if n is None:
+            n = len(sims)
+
+        return dict(map(lambda s: s[0], sorted(sims, key = lambda x: x[1], reverse=True)[:n]))
+
+    def filter_nearest_neighbours(self, n):
+        '''Filter nearest neighbours and only aggregate these.'''
+        for k in self.descrs:
+            self.descrs[k] = self.nearest_neighbours(k, n)
+
+    def update_space(self, aggFunc='mean', caching=True):
+        self.__init__(self.descrs, aggFunc=aggFunc, caching=caching)

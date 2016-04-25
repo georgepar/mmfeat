@@ -6,9 +6,9 @@ import cPickle as pickle
 import json
 import os
 import requests
+import shutil
 import sys
 import time
-import urllib2
 import yaml
 
 class DailyLimitException(Exception):
@@ -81,7 +81,7 @@ class BaseMiner(object):
 
     def saveFile(self, result):
         '''
-        result:     result object (BingResult, GoogleResult or FreesoundResult)
+        result:     result object (BingResult, GoogleResult or FlickrResult)
         '''
         if result.format in ['image/jpg', 'image/jpeg']:
             format = 'jpg'
@@ -89,35 +89,23 @@ class BaseMiner(object):
             format = 'png'
         elif result.format in ['image/gif']:
             format = 'gif'
-        elif result.format in ['audio/ogg']:
-            format = 'ogg'
         else: # unknown format, skipping
             return None
 
-        if self.__engine__ == 'freesound':
-            fname = '%s.%s' % (result.ID, format)
-        else:
-            fname = '%s.%s' % (self.file_id, format)
+        fname = '%s.%s' % (self.file_id, format)
         path = '%s/%s' % (self.save_dir, fname)
-        if self.__engine__ == 'freesound' and os.path.exists(path):
-            print('%s - already exists' % fname)
-            return
 
         # download the file
-        f = urllib2.urlopen(result.url, timeout=20)
-        if f is None:
-            return None
-        data = f.read()
-
-        if self.__engine__ == 'freesound':
-            response = json.loads(data)
-            f = urllib2.urlopen(response['previews']['preview-hq-ogg'])
-            if f is None:
+        try:
+            r = requests.get(result.url, stream=True, timeout=20)
+            if r.status_code != 200:
                 return None
-            data = f.read()
-
-        with open(path, 'wb') as fw:
-            fw.write(data)
+            r.raw.decode_content = True
+            with open(path, 'wb') as fw:
+                shutil.copyfileobj(r.raw, fw)
+        except: # something wrong, skipping..
+            print(fname, 'error saving')
+            return None
 
         print(fname)
 

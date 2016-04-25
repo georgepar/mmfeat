@@ -2,7 +2,6 @@ TODO
 ----
 If you are looking to contribute, feel free to do any of these things:
 
-- Give freesound miner its own saveFile method
 - Make the miners and other things multiprocessed
 - Add BoCC model
 - Unit tests

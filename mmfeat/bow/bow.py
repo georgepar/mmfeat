@@ -36,6 +36,7 @@ class BoW():
             self.data = data
 
         if self.centroids is None:
+            print('No centroids')
             self.centroids = self.cluster()
 
         self.descriptors = self.quantize()
@@ -43,19 +44,22 @@ class BoW():
     def cluster(self):
         mbk = MiniBatchKMeans(n_clusters=self.K, batch_size=self.K*2, verbose=self.verbose, compute_labels=False)
         if self.subsample is None:
-            data = np.vstack([self.data[k] for k in self.data.keys()])
+            data = np.vstack([self.data[k] for k in self.data.keys() if self.data[k] is not None])
             mbk.fit(data)
         else: # sample number of files
             fnames = self.data.keys()
             subset = random.sample(fnames, int(self.subsample * len(fnames)))
-            subdata = np.vstack([self.data[k] for k in subset])
+            subdata = np.vstack([self.data[k] for k in subset if self.data[k] is not None])
             mbk.fit(subdata)
         return mbk.cluster_centers_
+
+    def quantize_file(self, fname, fdata, centroids, clusters):
 
     def quantize(self):
         clusters = range(self.centroids.shape[0] + 1)
         histograms = {}
         for fname in sorted(self.data.keys()):
+            if self.data[fname] is None: continue
             idx,_ = vq(self.data[fname], self.centroids)
             histograms[fname], _ = np.histogram(idx, bins=clusters, normed=self.normalize)
         return histograms
@@ -63,6 +67,7 @@ class BoW():
     def sequences(self):
         sequences = {}
         for fname in sorted(self.data.keys()):
+            if self.data[fname] is None: continue
             idx,_ = vq(self.data[fname], self.centroids)
             sequences[fname] = idx
         return sequences
@@ -70,15 +75,23 @@ class BoW():
     def means(self):
         means = {}
         for fname in sorted(self.data.keys()):
+            if self.data[fname] is None: continue
             means[fname] = np.mean(self.data[fname], axis=0)
         return means
 
-    def toLookup(self):
+    def toLookup(self, n_files=None):
         lkp = {}
         # self.idx is obtained by children classes's load() method
         for key in self.idx:
             lkp[key] = {}
-            for fname in self.idx[key]:
+
+            # in case we only want to take a subset
+            fnames = self.idx[key]
+            if n_files is not None:
+                fnames = fnames[:n_files]
+
+            for fname in fnames:
+                if fname is None: continue
                 fname = fname.split('/')[-1]
                 if fname not in self.descriptors: continue
                 lkp[key][fname] = self.descriptors[fname]

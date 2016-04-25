@@ -115,11 +115,18 @@ class CNN(object):
             p.close()
             p.join()
 
-    def toLookup(self):
+    def toLookup(self, n_files=None):
         lkp = {}
         for key in self.idx:
             lkp[key] = {}
-            for fname in self.idx[key]:
+
+            # in case we only want to take a subset
+            fnames = self.idx[key]
+            if n_files is not None:
+                fnames = fnames[:n_files]
+
+            for fname in fnames:
+                if fname is None: continue
                 fname = fname.split('/')[-1]
                 if fname not in self.descriptors: continue
                 lkp[key][fname] = self.descriptors[fname]

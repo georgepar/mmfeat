@@ -53,8 +53,6 @@ class BoW():
             mbk.fit(subdata)
         return mbk.cluster_centers_
 
-    def quantize_file(self, fname, fdata, centroids, clusters):
-
     def quantize(self):
         clusters = range(self.centroids.shape[0] + 1)
         histograms = {}

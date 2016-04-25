@@ -56,6 +56,7 @@ class DataObject(object):
                 ### Backward compat with earlier versions of this code:
                 if isinstance(fname, (long, int)):
                     fname = '%d.ogg' % (fname)
+                if fname is None: continue
                 fname = fname.split('/')[-1]
                 ###
 

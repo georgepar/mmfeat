@@ -17,14 +17,18 @@ class MMSpace(Space):
         self.setMethodType(methodType)
 
         if modelType == 'middle':
-            # do some checks
+            # do some checks on visspace
             example_key = self.visSpace.keys()[0]
             if isinstance(self.visSpace[example_key], dict):
                 raise TypeError('Expecting vectors for the visual space, not dictionaries. Did you use AggSpace?')
-            elif not isinstance(self.visSpace[example_key], np.ndarray) or not isinstance(self.lingSpace[example_key], np.ndarray):
+            elif not isinstance(self.visSpace[example_key], np.ndarray):
                 raise TypeError('Expecting numpy.ndarray')
             elif self.visSpace[example_key].ndim != 1:
                 raise TypeError('Expecting tensors of rank 1 (vectors).')
+            # and on lingspace
+            example_key = self.lingSpace.keys()[0]
+            if not isinstance(self.lingSpace[example_key], np.ndarray):
+                raise TypeError('Expecting numpy.ndarray')
 
             if buildModel: # build model in-place
                 self.space = {}

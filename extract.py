@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--sample_files', type=float, action='store', \
         help='fraction of files to sample for clustering bag-of-words (default None, range 0-1)', default=None)
     parser.add_argument('-m', '--modelType', action='store', \
-        help='type of CNN model to use (default alexnet)', default='alexnet', choices=['vgg', 'alexnet'])
+        help='type of CNN model to use (default alexnet)', default='alexnet', choices=['vgg', 'alexnet', 'googlenet'])
     parser.add_argument('-v', '--verbose', action='store_true', \
         help='verbosity (default True)', default=True)
     args = parser.parse_args()

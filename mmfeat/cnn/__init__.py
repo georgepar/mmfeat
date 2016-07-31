@@ -50,9 +50,13 @@ class CNN(object):
             caffe.set_device(self.gpuid)
             caffe.set_mode_gpu()
 
-        if modelType == 'alexnet':
+        if modelType == 'caffenet':
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt',
                 self.caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel', caffe.TEST)
+            self.useLayer = 'fc7'
+        elif modelType == 'alexnet':
+            mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_alexnet/deploy.prototxt',
+                self.caffe_root + 'models/bvlc_alexnet/bvlc_alexnet.caffemodel', caffe.TEST)
             self.useLayer = 'fc7'
         elif modelType == 'vgg':
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/vgg/VGG_ILSVRC_19_layers_deploy.prototxt',

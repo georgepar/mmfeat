@@ -23,17 +23,23 @@ class BoVW(BoW):
 
         if self.cached:
             if not os.path.exists(fname + '-dsift.npy'):
-                img = imread(fname)
-                data = self.dsift.process_image(img)
-                np.save(fname + '-dsift.npy', data)
+                try:
+                    img = imread(fname)
+                    data = self.dsift.process_image(img)
+                    np.save(fname + '-dsift.npy', data)
+                except IOError:
+                    return None
             else:
                 try:
                     data = np.load(fname + '-dsift.npy')
                 except:
                     return None
         else:
-            img = imread(fname)
-            data = self.dsift.process_image(img)
+            try:
+                img = imread(fname)
+                data = self.dsift.process_image(img)
+            except IOError:
+                return None
 
         return data
 

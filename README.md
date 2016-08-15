@@ -8,13 +8,18 @@ The following models are currently available:
 3. BoAW: Bag-of-audio-words for sound files, using MFCC local descriptors
 
 ## Getting started
-The following dependencies need to be installed: [numpy](http://www.numpy.org), [scipy](http://www.scipy.org), [scikit-learn](http://scikit-learn.org/) and yaml. If you want to use the CNN model, you will also need to [install Caffe](http://caffe.berkeleyvision.org/installation.html). For BoAW you will need to [install librosa](https://bmcfee.github.io/librosa/install.html) as well.
+The following dependencies need to be installed: [numpy](http://www.numpy.org), [scipy](http://www.scipy.org), [scikit-learn](http://scikit-learn.org/) and yaml. You may need to install [Pillow](https://pypi.python.org/pypi/Pillow) for reading images from files into arrays. If you want to use the CNN model, you will also need to [install Caffe](http://caffe.berkeleyvision.org/installation.html). For BoAW you will need to [install librosa](https://bmcfee.github.io/librosa/install.html) as well.
 
 #### Installing the main dependencies on Ubuntu:
 ```sh
 sudo apt-get install build-essential python-dev python-setuptools \
                 python-numpy python-scipy python-sklearn python-yaml
 ```
+
+## Citations
+If you use this toolkit in your work, please cite the following paper:
+
+D. Kiela (2016). _MMFEAT: A Toolkit for Extracting Multi-Modal Features_. Proceedings of ACL 2016: System Demonstrations, Berlin, Germany.
 
 ## Tools
 The toolkit comes with two tools that do not require any knowledge of Python and that can be run from the command-line.

@@ -50,12 +50,22 @@ class CNN(object):
             caffe.set_device(self.gpuid)
             caffe.set_mode_gpu()
 
-        if modelType == 'alexnet':
+        if modelType == 'caffenet':
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt',
                 self.caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel', caffe.TEST)
+            self.useLayer = 'fc7'
+        elif modelType == 'alexnet':
+            mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_alexnet/deploy.prototxt',
+                self.caffe_root + 'models/bvlc_alexnet/bvlc_alexnet.caffemodel', caffe.TEST)
+            self.useLayer = 'fc7'
         elif modelType == 'vgg':
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/vgg/VGG_ILSVRC_19_layers_deploy.prototxt',
                self.caffe_root + 'models/vgg/VGG_ILSVRC_19_layers.caffemodel', caffe.TEST)
+            self.useLayer = 'fc7'
+        elif modelType == 'googlenet':
+            mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_googlenet/deploy.prototxt',
+               self.caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel', caffe.TEST)
+            self.useLayer = 'pool5/7x7_s1'
 
         # standard imagenet data transformer
         transformer = caffe.io.Transformer({'data': mmfeat_caffe_net.blobs['data'].data.shape})
@@ -73,8 +83,6 @@ class CNN(object):
             self.descriptors = manager.dict()
 
         self.transformer = transformer
-
-        self.useLayer = 'fc7'
 
     def load(self, datadir):
         self.data = DataObject(datadir, self.loadFile)

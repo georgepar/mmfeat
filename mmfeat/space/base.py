@@ -83,11 +83,14 @@ class AggSpace(Space):
             self.space = {}
             for k in self.descrs.keys():
                 vecs = self.descrs[k].values()
-                if len(vecs) < 2:
+                if len(vecs) == 0:
                     if self.reportMissing:
                         print('Warning: Not enough vectors for key %s - skipping' % k)
                     continue
-                self.space[k] = f(vecs)
+                if len(vecs) == 1:
+                    self.space[k] = vecs[0]
+                else:
+                    self.space[k] = f(vecs)
 
             if self.caching and self.cached_file_name is not None:
                 pickle.dump(self.space, open(self.cached_file_name, 'wb'))

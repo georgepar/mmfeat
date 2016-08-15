@@ -25,11 +25,11 @@ D. Kiela (2016). _MMFEAT: A Toolkit for Extracting Multi-Modal Features_. Procee
 The toolkit comes with two tools that do not require any knowledge of Python and that can be run from the command-line.
 
 #### miner.py
-For mining images or sound files. Before you can use the miner you need to acquire API keys from [Google](https://console.developers.google.com), [Bing](https://datamarket.azure.com/account/keys), [FreeSound](http://www.freesound.org/apiv2/apply) or [Flickr](https://www.flickr.com/services)  and set them in `miner.yaml` (see `miner-example.yaml` for an example). The `query_file` argument should point to a file that contains a list of queries, one query per line. Usage:
+For mining images or sound files. Before you can use the miner you need to acquire API keys from [Google](https://console.developers.google.com), [Bing](https://datamarket.azure.com/account/keys), [FreeSound](http://www.freesound.org/apiv2/apply) or [Flickr](https://www.flickr.com/services) and set them in `miner.yaml` (see `miner-example.yaml` for an example). ImageNet does not require an API key. The `query_file` argument should point to a file that contains a list of queries, one query per line. Usage:
 
 ```sh
 miner.py [-h] [-n NUM_FILES]
-                {bing,google,freesound,flickr} query_file data_dir
+                {bing,google,freesound,flickr,imagenet} query_file data_dir
 ```
 Examples:
 ```sh
@@ -85,3 +85,11 @@ The demo downloads images for "elephant" and "happiness" and calculates the imag
 #### 6. Image search plot (6-searchplot)
 
 A simple plotting demo of images returned by various search engines. Requires [matplotlib](http://matplotlib.org/).
+
+#### 7. CNN layers (7-cnnlayers)
+
+Shows how you can transfer different layers from the CNN models.
+
+#### 8. ImageNet (8-imagenet)
+
+Uses ImageNet to retrieve images for provided synsets. This requires NLTK and the NLTK WordNet corpus to be installed.

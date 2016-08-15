@@ -99,7 +99,7 @@ class AggSpace(Space):
     def aggMax(self, m):
         return np.max(np.nan_to_num(m), axis=0)
 
-    def getDispersions(self, rescale=True):
+    def getDispersions(self, rescale=True, n_images=None):
         self.cached_dispersions_file = None
         if self.caching and hasattr(self, 'descrs_file'):
             self.cached_dispersions_file = '%s-dispersions.pkl' % (self.descrs_file)
@@ -119,7 +119,12 @@ class AggSpace(Space):
         self.dispersions = {}
         min_disp, max_disp = 1, 0
         for k in self.descrs:
-            imgdisp = disp(self.descrs[k].values())
+            image_reps = self.descrs[k].values()
+            if n_images is not None:
+                image_reps = image_reps[:n_images]
+
+            imgdisp = disp(image_reps)
+
             self.dispersions[k] = imgdisp
             if imgdisp > max_disp:
                 max_disp, max_key = imgdisp, k

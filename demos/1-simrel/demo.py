@@ -28,7 +28,7 @@ if __name__ == '__main__':
     engine = sys.argv[1]
     method = sys.argv[2]
 
-    useGPU = False # change to True if you want to use the GPU
+    useGPU = True # change to False if you don't want to use the GPU
 
     data_dir = './demo-data-%s' % engine
 
@@ -53,7 +53,9 @@ if __name__ == '__main__':
             miner = GoogleMiner(data_dir, '../../miner.yaml')
         elif engine == 'freesound':
             miner = FreeSoundMiner(data_dir, '../../miner.yaml')
-        miner.getResults(unique_words, 10)
+
+        # if you already have results, you can use miner.loadResults instead
+        miner.getResults(unique_words, 50)
         miner.save()
     else:
         print('Image directory already exists..')
@@ -64,23 +66,42 @@ if __name__ == '__main__':
     if method == 'bovw':
         model = BoVW(100, subsample=0.1)
     elif method == 'cnn':
-        model = CNN(modelType='alexnet', gpu=useGPU)
+        model = CNN(modelType='alexnet', gpu=useGPU, n_workers=32)
 
     print('Loading data..')
     model.load(data_dir)
+
+    if method == 'bovw':
+        if os.path.exists('%s/centroids.pkl' % data_dir):
+            print('Loading centroids..')
+            model.centroids = pickle.load(open('%s/centroids.pkl' % data_dir, 'rb'))
+
     print('Fitting..')
     model.fit()
+
+    if method == 'bovw':
+        pickle.dump(model.centroids, open(model.data_dir + '/centroids.pkl', 'wb'))
 
     #
     # 3. Build visual and linguistic spaces
     #
+    print('Saving raw data')
+    pickle.dump(model.descriptors, open('%s/%s-descriptors.pkl' % (data_dir, method), 'wb'))
+
     print('Building visual lookup')
-    lkp = model.toLookup()
+    lkp = model.toLookup(n_files=10)
+
+    print('Saving visual lookup')
+    if method == 'bovw':
+        pickle.dump(lkp, open('%s/bovw.pkl' % data_dir, 'wb'))
+    elif method == 'cnn':
+        pickle.dump(lkp, open('%s/fc7.pkl' % data_dir, 'wb'))
 
     print('Loading visual space')
     vs = AggSpace(lkp, 'mean')
 
     print('Loading linguistic space')
+#    ls = Space('simrel-mikolov.pkl')
     ls = Space('simrel-wikipedia.pkl')
 
     #

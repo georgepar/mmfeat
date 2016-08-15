@@ -49,15 +49,14 @@ class GoogleMiner(BaseMiner):
                 if self.sleep_time > self.max_sleep_time:
                     self.sleep_time = 5
             elif r.status_code == 403:
-                if 'error' in results and 'message' in results['error'] \
-                    and (results['error']['message'].startswith('Daily Limit Exceeded.') or results['error']['message'].startswith('Project blocked;')):
-
-                    print('ERR (Google): Daily limit exceeded, trying other key..')
-                    if self.cur_api_key >= len(self.api_keys)-1:
-                        raise DailyLimitException('Daily limit reached (and no more API keys available).')
-                    else:
-                        self.cur_api_key += 1
-                        return self._search(query, offset)
+#                if 'error' in results and 'message' in results['error'] \
+#                    and (results['error']['message'].startswith('Daily Limit Exceeded.') or results['error']['message'].startswith('Project blocked;')):
+                print('ERR (Google): Daily limit exceeded, trying other key..')
+                if self.cur_api_key >= len(self.api_keys)-1:
+                    raise DailyLimitException('Daily limit reached (and no more API keys available).')
+                else:
+                    self.cur_api_key += 1
+                    return self._search(query, offset)
             else:
                 time.sleep(self.sleep_time)
 

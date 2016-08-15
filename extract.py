@@ -19,6 +19,8 @@ if __name__ == '__main__':
         help='file to store extracted features in (default will be a Python pickle, overwrite with -o)')
     parser.add_argument('-gpu', action='store_true', \
         help='use GPU for CNNs (default False)', default=False)
+    parser.add_argument('-storedescriptors', action='store_true', \
+        help='store descriptors as separate pickle for later use', default=False)
     parser.add_argument('-gpuid', type=int, action='store', \
         help='GPU id for CNNs (default 0)', default=0)
     parser.add_argument('-k', type=int, action='store', \
@@ -62,6 +64,9 @@ if __name__ == '__main__':
     lkp = model.toLookup()
 
     print('Saving.. to %s' % args.out_file)
+    if args.storedescriptors:
+        pickle.dump(model.descriptors, open(args.out_file + '-descriptors.pkl', 'wb'))
+
     if args.output == 'pickle':
         pickle.dump(lkp, open(args.out_file, 'wb'))
     elif args.output == 'json':

@@ -32,6 +32,7 @@ class BaseMiner(object):
         self.max_sleep_time = 60*60 # 1 hour
         self.save_results_every_n = 20
         self.idx = {}
+        self.results = {}
 
         if self.save_dir[-1] == '/':
             self.save_dir = self.save_dir[:-1] # strip trailing / if any
@@ -39,6 +40,7 @@ class BaseMiner(object):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         elif os.path.exists(self.save_dir + '/index.pkl'):
+            self.results    = pickle.load(open(self.save_dir + '/results.pkl', 'rb'))
             self.idx        = pickle.load(open(self.save_dir + '/index.pkl', 'rb'))
             self.file_id    = max([int(fname.split('.')[0]) \
                                 for sublist in self.idx.itervalues() \
@@ -49,15 +51,22 @@ class BaseMiner(object):
         queries:    list of queries
         limit:      number of files per query
         '''
-        self.results = {}
         for ii, query in enumerate(queries):
             if query in self.idx:
                 n_stored_results = len(self.idx[query])
+                print query, n_stored_results, 'present'
                 if n_stored_results >= limit:
                     print('%s already exists and has enough images, skipping..' % query)
                     continue
 
+            if query in self.results:
+                n_stored_results = len(self.results[query])
+                if n_stored_results >= limit:
+                    print('%s already queried, skipping..' % query)
+                    continue
+
             print('Querying for %s' % query)
+
             try:
                 query_results = self.search(query, limit)
                 if query in self.idx and n_stored_results >= len(query_results):

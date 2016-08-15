@@ -16,6 +16,11 @@ sudo apt-get install build-essential python-dev python-setuptools \
                 python-numpy python-scipy python-sklearn python-yaml
 ```
 
+## Citations
+If you use this toolkit in your work, please cite the following paper:
+
+D. Kiela (2016). _MMFEAT: A Toolkit for Extracting Multi-Modal Features_. Proceedings of ACL 2016: System Demonstrations, Berlin, Germany.
+
 ## Tools
 The toolkit comes with two tools that do not require any knowledge of Python and that can be run from the command-line.
 

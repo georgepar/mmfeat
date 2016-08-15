@@ -90,7 +90,7 @@ class BaseMiner(object):
 
     def saveFile(self, result):
         '''
-        result:     result object (BingResult, GoogleResult or FlickrResult)
+        result:     result object (BingResult, GoogleResult, FlickrResult or ImageNetResult)
         '''
         if result.format in ['image/jpg', 'image/jpeg']:
             format = 'jpg'
@@ -98,8 +98,8 @@ class BaseMiner(object):
             format = 'png'
         elif result.format in ['image/gif']:
             format = 'gif'
-        else: # unknown format, skipping
-            return None
+        else: # unknown format, default to jpg
+            format = 'jpg'
 
         fname = '%s.%s' % (self.file_id, format)
         path = '%s/%s' % (self.save_dir, fname)

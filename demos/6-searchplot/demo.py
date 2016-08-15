@@ -118,7 +118,7 @@ def gridplot(data_dir, idx, words, out_plot, n_images):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print('Usage: python %s {google|bing|flickr} out_plot')
+        print('Usage: python %s {google|bing|flickr|imagenet} out_plot')
         quit()
 
     engine = sys.argv[1]
@@ -128,11 +128,7 @@ if __name__ == '__main__':
     # 0. Set up data
     #
     data_dir = './demo-data-%s' % engine
-    words = ['dog', 'golden retriever']
-    if engine == 'esp':
-        words = ['dog']
-    elif engine == 'imagenet':
-        words = ['golden retriever']
+    words = ['dog', 'cat']
     n_images = 5
 
     #
@@ -146,7 +142,9 @@ if __name__ == '__main__':
             miner = GoogleMiner(data_dir, '../../miner.yaml')
         elif engine == 'flickr':
             miner = FlickrMiner(data_dir, '../../miner.yaml')
-        miner.getResults(words, 10)
+        elif engine == 'imagenet':
+            miner = ImageNetMiner(data_dir, '../../miner.yaml')
+        miner.getResults(words, n_images)
         miner.save()
     else:
         print('Image directory already exists..')

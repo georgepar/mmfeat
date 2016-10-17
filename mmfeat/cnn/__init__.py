@@ -19,7 +19,7 @@ except ImportError:
 mmfeat_caffe_net = None # needs to be global because of multiprocessing
 
 class CNN(object):
-    def __init__(self, caffe_root=None, modelType='alexnet', gpu=False, gpuid=0, verbose=True, n_workers=12):
+    def __init__(self, caffe_root=None, modelType='alexnet', modelLocation=None, gpu=False, gpuid=0, verbose=True, n_workers=12):
         global mmfeat_caffe_net
 
         if caffe_root is None:
@@ -41,6 +41,10 @@ class CNN(object):
             self.caffe_root = caffe_root
 
         self.modelType = modelType
+        self.modelLocation = modelLocation
+        if self.modelType == 'custom' and modelLocation is None:
+            raise ValueError('Selected custom model typed by failed to specify its location')
+
         self.useGPU = gpu
         self.gpuid = gpuid
         self.verbose = verbose
@@ -66,6 +70,11 @@ class CNN(object):
             mmfeat_caffe_net = caffe.Net(self.caffe_root + 'models/bvlc_googlenet/deploy.prototxt',
                self.caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel', caffe.TEST)
             self.useLayer = 'pool5/7x7_s1'
+        if modelType == 'custom':
+            # assume we have a deploy in the same dir and that we want fc7
+            mmfeat_caffe_net = caffe.Net(self.caffe_root + os.path.dirname(self.modelLocation) + '/deploy.prototxt',
+                self.caffe_root + self.modelLocation, caffe.TEST)
+            self.useLayer = 'fc7'
 
         # standard imagenet data transformer
         transformer = caffe.io.Transformer({'data': mmfeat_caffe_net.blobs['data'].data.shape})
@@ -90,6 +99,10 @@ class CNN(object):
 
     def loadFile(self, fname):
         #if self.verbose: print('Loading %s' % fname)
+        if self.modelType == 'custom':
+            if not os.path.exists(fname):
+                fname = fname[:-3] + 'png'
+
         try:
             image = caffe.io.load_image('%s' % fname)
             return self.transformer.preprocess('data', image)
@@ -139,7 +152,7 @@ class CNN(object):
 
             for fname in fnames:
                 if fname is None: continue
-                fname = fname.split('/')[-1]
+                fname = str(fname).split('/')[-1]
                 if fname not in self.descriptors: continue
                 lkp[key][fname] = self.descriptors[fname]
         return lkp

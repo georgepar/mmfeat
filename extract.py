@@ -31,8 +31,12 @@ if __name__ == '__main__':
         help='type of output file (default pickle)', choices=['pickle', 'json', 'csv'], default='pickle')
     parser.add_argument('-s', '--sample_files', type=float, action='store', \
         help='fraction of files to sample for clustering bag-of-words (default None, range 0-1)', default=None)
+    parser.add_argument('-n', '--n_files', type=int, action='store', \
+        help='number of files to use when creating lookup')
     parser.add_argument('-m', '--modelType', action='store', \
-        help='type of CNN model to use (default alexnet)', default='alexnet', choices=['vgg', 'alexnet', 'googlenet'])
+        help='type of CNN model to use (default alexnet)', default='alexnet', choices=['vgg', 'alexnet', 'caffenet', 'googlenet', 'custom'])
+    parser.add_argument('-ml', '--modelLocation', action='store', \
+        help='location of CNN model if custom modelType')
     parser.add_argument('-v', '--verbose', action='store_true', \
         help='verbosity (default True)', default=True)
     args = parser.parse_args()
@@ -49,24 +53,26 @@ if __name__ == '__main__':
     elif args.model == 'bovw':
         model = BoVW(args.k, subsample=args.sample_files)
     elif args.model == 'cnn':
-        model = CNN(modelType=args.modelType, gpu=args.gpu, gpuid=args.gpuid)
+        model = CNN(modelType=args.modelType, modelLocation=args.modelLocation, gpu=args.gpu, gpuid=args.gpuid)
 
     print('Loading..')
     model.load(args.data_dir)
 
-    print('Fitting..')
     if args.centroids is not None:
         print('Pre-loading centroids.. from %s' % args.centroids)
         model.centroids = pickle.load(open(args.centroids, 'rb'))
+
+    print('Fitting..')
     model.fit()
 
-    print('Building lookup')
-    lkp = model.toLookup()
-
-    print('Saving.. to %s' % args.out_file)
     if args.storedescriptors:
+        print('Saving descriptors to %s-descriptors.pkl' % args.out_file)
         pickle.dump(model.descriptors, open(args.out_file + '-descriptors.pkl', 'wb'))
 
+    print('Building lookup')
+    lkp = model.toLookup(n_files=args.n_files)
+
+    print('Saving.. to %s' % args.out_file)
     if args.output == 'pickle':
         pickle.dump(lkp, open(args.out_file, 'wb'))
     elif args.output == 'json':

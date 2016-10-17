@@ -29,15 +29,26 @@ if __name__ == '__main__':
         quit()
 
     method = sys.argv[1]
+    esp_dir = '../../../data/'
+    data_dir = '../../../data/ESPGame100k/'
 
     #
     # 1. Fetch the ESP Game dataset
     #
-    print('Fetching the ESP Game dataset')
-    os.system('wget http://server251.theory.cs.cmu.edu/ESPGame100k.tar.gz')
-    os.system('tar xvzf ESPGame100k.tar.gz')
+    if not os.path.exists('esp.tgz'):
+        print('Fetching the ESP Game dataset')
+        sources = ['http://server251.theory.cs.cmu.edu/ESPGame100k.tar.gz',
+            'http://hunch.net/~learning/ESP-ImageSet.tar.gz']
+        for source in sources:
+            success = os.system('wget %s -O esp.tgz' % (source))
+            print success
+            if success == 0: # exit code 0 = no problems occurred
+                break
+        if success != 0:
+            raise ValueError('Could not download ESP Game dataset - please find another source for the data')
 
-    data_dir = '../../../data/ESPGame100k/'
+    print('Unpacking ESP game dataset')
+    os.system('tar xvzf esp.tgz -C %s/..' % (esp_dir)) # unpacking one up from actualy data dir
 
     #
     # 2. If the index doesn't exist, build it and save it to the data_dir

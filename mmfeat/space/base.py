@@ -5,6 +5,7 @@ Vector space model bases
 import os
 
 import cPickle as pickle
+import ujson as json
 
 import numpy as np
 
@@ -16,11 +17,21 @@ class Space(object):
     def __init__(self, descrs):
         self.reportMissing = True
         if isinstance(descrs, str):
-            self.space = pickle.load(open(descrs, 'rb'))
+            if descrs.endswith('pkl'):
+                with open(descrs, 'rb') as f:
+                    self.space = pickle.load(f)
+            elif descrs.endswith('json'):
+                with open(descrs, 'r') as f:
+                    self.space = json.load(f)
         elif isinstance(descrs, dict):
             self.space = descrs
         else:
             raise TypeError('Expecting file name or dictionary of descriptors')
+        for k, v in self.space.iteritems():
+             if isinstance(v, np.ndarray):
+                 break
+             else:
+                 self.space[k] = np.array(v)
 
     def __getitem__(self, key):
         return self.space[key]

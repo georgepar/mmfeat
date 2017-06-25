@@ -52,6 +52,9 @@ class MMSpace(Space):
         elif modelType == 'late':
             self.sim = self.lateSimFunc
 
+    def __contains__(self, key):
+        return key in self.lingSpace and key in self.visSpace
+
     def concat(self, u, v, alpha=None):
         if alpha is None:
             alpha = self.alpha
@@ -165,10 +168,11 @@ class AVTSpace(Space):
         return self.alpha * lingSim + self.beta * visSim + (1 - self.alpha - self.beta) * audioSim
 
 
-def MMEstimator(BaseEstimator):
-    def __init__(mmspace, alpha=0.5, beta=None):
+class MMEstimator(BaseEstimator):
+    def __init__(self, mmspace, alpha=0.5, beta=None):
         self.mmspace = mmspace
         self.alpha = alpha
+        self.beta = beta
         self.actual_values = {}
         self.test_pairs = 0
 
@@ -176,7 +180,7 @@ def MMEstimator(BaseEstimator):
         if dataset == 'men':
             ds_file = os.path.join(datasetLocation, 'MEN_dataset_natural_form_full')
             with open(ds_file, 'r') as f:
-                lines = [l.strip().split[' '] for l in f.readlines()]
+                lines = [l.strip().split(' ') for l in f.readlines()]
                 self.actual_values = {(l[0], l[1]): float(l[2]) for l in lines}
         elif dataset == 'simlex-999':
             ds_file = os.path.join(datasetLocation, 'Simlex-999.txt')
@@ -191,11 +195,11 @@ def MMEstimator(BaseEstimator):
         return self
 
     def _meaning(self, x):
-        if x[0] in mmspace.space and x[1] in mmspace.space:
-            if beta is None:
-                return mmspace.space.sim(x[0], x[1], alpha=alpha)
+        if x[0] in self.mmspace and x[1] in self.mmspace:
+            if self.beta is None:
+                return self.mmspace.sim(x[0], x[1], alpha=self.alpha)
             else:
-                return mmspace.space.sim(x[0], x[1], alpha=alpha, beta=beta)
+                return self.mmspace.sim(x[0], x[1], alpha=self.alpha, beta=self.beta)
         else:
             return np.NaN
 

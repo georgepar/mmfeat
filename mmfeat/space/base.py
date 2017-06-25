@@ -21,14 +21,19 @@ class Space(object):
             self.space = descrs
         else:
             raise TypeError('Expecting file name or dictionary of descriptors')
+
     def __getitem__(self, key):
         return self.space[key]
+
     def __contains__(self, key):
         return key in self.space
+
     def keys(self):
         return self.space.keys()
+
     def sim(self, x, y):
         return cosine(self.space[x], self.space[y])
+
     def spearman(self, dataset):
         if not isinstance(dataset, list) \
                 or len(dataset) == 0 \
@@ -46,16 +51,24 @@ class Space(object):
                     print('Warning: Missing pair %s-%s - skipping' % (one, two))
                 continue
         return spearmanr(gs_scores, sys_scores)
+
     def neighbours(self, key, n=None):
         sims = []
         for other_key in self.space:
             if other_key == key: continue
-            sims = (other_key, self.sim(key, other_key))
-
+            sims.append((other_key, self.sim(key, other_key)))
         if n is None:
             n = len(sims)
-
         return sorted(sims, key = lambda x: x[1], reverse=True)[:n]
+
+    def neighbours_external_point(self, p, n=None):
+        sims = []
+        for key in self.space:
+            sims.append((key, cosine(p, self.space[key])))
+        if n is None:
+            n = len(sims)
+        return sorted(sims, key=lambda x: x[1], reverse=True)[:n]
+
 
 class AggSpace(Space):
     def __init__(self, descrs, aggFunc='mean', caching=True):
@@ -82,6 +95,8 @@ class AggSpace(Space):
 
             self.space = {}
             for k in self.descrs.keys():
+                if k == '':
+                    continue
                 vecs = self.descrs[k].values()
                 if len(vecs) == 0:
                     if self.reportMissing:
@@ -91,14 +106,15 @@ class AggSpace(Space):
                     self.space[k] = vecs[0]
                 else:
                     self.space[k] = f(vecs)
-
             if self.caching and self.cached_file_name is not None:
                 pickle.dump(self.space, open(self.cached_file_name, 'wb'))
 
     def aggMean(self, m):
         return np.mean(np.nan_to_num(m), axis=0, dtype=np.float64)
+
     def aggMedian(self, m):
         return np.median(np.nan_to_num(m), axis=0)
+
     def aggMax(self, m):
         return np.max(np.nan_to_num(m), axis=0)
 

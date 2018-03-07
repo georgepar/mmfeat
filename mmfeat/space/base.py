@@ -9,7 +9,7 @@ import ujson as json
 
 import numpy as np
 
-from scipy.stats import spearmanr
+from scipy.stats import spearmanr, pearsonr
 
 from .sim import cosine
 
@@ -45,6 +45,31 @@ class Space(object):
 
     def sim(self, x, y):
         return cosine(self.space[x], self.space[y])
+
+    def pearson(self, dataset, **kwargs):
+        if not isinstance(dataset, list) \
+                or len(dataset) == 0 \
+                or len(dataset[0]) != 3 \
+                or not isinstance(dataset[0][2], float):
+            raise TypeError('Dataset is not of correct type, list of [str, str, float] triples expected.')
+        gs_scores, sys_scores = [], []
+        pairs_not_found = 0
+        pairs = []
+        for one, two, gs_score in dataset:
+            try:
+                sys_score = self.sim(one, two, **kwargs)
+                gs_scores.append(gs_score)
+                sys_scores.append(sys_score)
+            except KeyError:
+                pairs_not_found += 1
+                pairs.append([one, two])
+                # if self.reportMissing:
+                    # print('Warning: Missing pair %s-%s - skipping' % (one, two))
+                continue
+        print("Not found {}".format(pairs_not_found))
+        print("Evaluated {}".format(len(dataset)))
+        corr, sig = pearsonr(gs_scores, sys_scores)
+        return corr, sig, len(dataset) - pairs_not_found, pairs
 
     def spearman(self, dataset, **kwargs):
         if not isinstance(dataset, list) \
